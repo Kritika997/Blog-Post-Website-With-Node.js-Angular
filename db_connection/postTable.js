@@ -1,25 +1,23 @@
 const mongoose = require('mongoose');
 
 const userPost = new mongoose.Schema({
-    Blog:{
-        type: 'string',
-        maxLength: 200
+    Email:{
+        type:String
     },
-    Picture:{
-        type: 'string',
+    Blog: {
+        type: Object
     },
-    Comment:{
-        type:'string',
-        maxLength: 100
+    Comment: {
+        type: Array
     },
-    Like:{
-        type:Number
+    Like: {
+        type: Number
     },
-    Dislike:{
-        type:Number
+    Dislike: {
+        type: Number
     }
 });
 
-let post = mongoose.model('usersPost',userPost);
+let post = mongoose.model('postsbyuser', userPost);
 
 module.exports = post;

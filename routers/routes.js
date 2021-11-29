@@ -1,32 +1,19 @@
 const express = require("express");
-const control = require("../controllers/signup");
+const control = require("../controllers/signupAndLogin");
 const contPost = require("../controllers/posts");
-var route = express.Router();
-const multer = require("multer");
-const authrization = require("../authorization/auth")
+const route = express.Router();
+const multerFile = require("../controllers/multerFile");
+const Middleware = require("../Middleware/Auth")
 
-
-const Storage = multer.diskStorage({
-
-    destination: function(req, file, cb) {
-        cb(null, './uploads');
-     },
-    filename: function (req, file, cb) {
-        cb(null , file.originalname);
-    }
-});
-
-const upload = multer({
-    storage: Storage
-})
-
-route.post("/signup",upload.single('testimage') ,control.signUp); 
-
-route.get("/login",control.login);
-route.post("/otpOnEmail",control.otpOnEmail);
-route.post("/forgetPassword",control.forgetPassword);
-route.post("/createPost",upload.single('testimage'),authrization,contPost.createPost);
-route.get("/seeAllPost",contPost.seeAllPost);
-// route.get("/try",authrization,control.try);
-
+route.post("/signup", multerFile.single('testimage'), control.signUp);
+route.get("/login", control.login);
+route.post("/sendMail", control.sendMail);
+route.post("/forgetPassword", control.forgetPassword);
+route.post("/createPost", multerFile.single('testimage'), Middleware, contPost.createPost);
+route.get("/seeAllPost", contPost.seeAllPost);
+route.post("/LikePost", Middleware, contPost.LikePost);
+route.post("/Comment",Middleware,contPost.Comment);
+route.put("/EditPost",multerFile.single('testimage'),contPost.EditPost);
+route.delete("/deletePost",contPost.deletePost);
+route.get("/UserProfileAndPost",Middleware,contPost.UserProfileAndPost)
 module.exports = route;
