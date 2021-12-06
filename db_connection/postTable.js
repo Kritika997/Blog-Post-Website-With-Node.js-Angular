@@ -1,22 +1,21 @@
 const mongoose = require('mongoose');
 
 const userPost = new mongoose.Schema({
-    Email:{
-        type:String
+    UserId:{
+        type:mongoose.Schema.Types.ObjectId, ref:'UserDetails'
     },
     Blog: {
         type: Object
     },
-    Comment: {
-        type: Array
-    },
-    Like: {
-        type: Number
-    },
-    Dislike: {
-        type: Number
+    Like:{
+        type:Number
     }
+    },
+    {timestamps:true
 });
+
+//user table schema for storing the post which will create by user
+
 
 let post = mongoose.model('postsbyuser', userPost);
 

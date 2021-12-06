@@ -1,5 +1,7 @@
 const multer = require("multer");
 
+// This a function which we have created for storing image in our database
+
 const Storage = multer.diskStorage({
 
     destination: function (req, file, cb) {

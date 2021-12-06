@@ -3,215 +3,143 @@ const mongoose = require('mongoose');
 const multer = require("multer");
 const User = require("../db_connection/userTable")
 const usersPost = require("../db_connection/postTable");
-const { deleteOne } = require("../db_connection/userTable");
 const app = express();
 app.use(express.json());
 
 
+// In this API we are creating our post which user want to create after login only user can create it.
 
 exports.createPost = async (req, res) => {
     try {
-        user_email = req.user.Email;
-        // console.log(user_email);
-        var userDetails = await User.findOne({ user_email: user_email })
-        // console.log(userDetails);
+
+        var userDetails = await User.findOne({ user_email: req.user.Email });
+
         if (userDetails) {
-            let email = userDetails.user_email
-            // console.log(email);
-            let blog = req.body.Blog;
-            var wordCount = blog.match(/(\w+)/g).length;
+            // console.log(userDetails)
+
+            var wordCount = req.body.Blog.match(/(\w+)/g).length;
             // console.log(wordCount)
 
             if (wordCount <= 200) {
                 const pic = req.file.filename
+                const blog = req.body.Blog
                 const postData = {
-                    Email: email,
+                    UserId: userDetails["_id"],
                     Blog: { pic, blog },
                     Comment: req.body.Comment,
                     Like: req.body.Like,
                     Dislike: req.body.Dislike
                 };
-                // console.log(postData)
+
                 let data = new usersPost(postData);
                 await data.save();
 
-                res.send({
-                    status: "success",
-                    data: data
+                res.status(201).json({
+                    message: "Post created successfully...."
                 });
             }
             else {
-                console.log("The Blog should have maximum 200 or less than 200 words are allowed")
+                res.json({
+                    message:"Blog size should be equal and less than 200...."
+                });
             };
+
         } else {
-            res.send({
-                status: "error",
-                message: "you need to login first"
+            res.status(401).json({
+                message:"user not Authorization"
             });
+            
         };
     }
     catch (err) {
-        res.send({
-            status: "error"
-        })
-    }
+        res.status(400).json({
+            message: "error"
+        });
+    };
 
 };
+
+// With this API user can see all post without login or signup
 
 exports.seeAllPost = async (req, res) => {
     try {
         const posts = await usersPost.find()
-        res.json(posts);
+        res.status(200).json({
+            data:posts
+        });
     }
     catch (error) {
-        res.status(500).send(error);
+        res.status(400).json({
+            message:error
+        });
     };
 }
 
-exports.LikePost = async (req, res) => {
-    var user_email = req.user.Email;
-    // console.log(user_email);
-    // finding the email address is in a database or not because should be login before like or dislike the post
-    var userDetails = await User.findOne({ user_email: user_email });
-    if (userDetails) {
-        // console.log(userDetails)
-        var Id = req.body.id
-        //finding the post is exits in our database or not? by the post id
-        var searchId = await usersPost.findOne({ _id: Id });
-        if (searchId) {
-            // console.log(searchId["Like"]) 
-            var like = req.body.like;
-            var dislike = req.body.Dislike
-            if (like == "like") {
-                // adding the value in database like
-                var UserLike = searchId["Like"] + 1;
-                // console.log(UserLike)
-                searchId.Like = UserLike
-                await searchId.save()
-                res.send({
-                    status: "success",
-                    data: searchId
-                })
 
-            }
-            else if (dislike == "Dislike") {
-                // console.log(searchId)
-                // adding the value in database dislike
-                var UserDislike = searchId["Dislike"] + 1;
-                // console.log(UserDislike)
-                searchId.Dislike = UserDislike
-                await searchId.save()
-                res.send({
-                    status: "success",
-                    data: searchId
-                })
-            }
-            else {
-                console.log("sorry you can not do like and dislike thsi post")
-            };
+// Only Admin can update the post which he created
 
+exports.EditPost = async (req, res) => {
+
+    var userData = await usersPost.find({ user_email: req.user.Email });
+
+    if (userData) {
+        var UserId = await usersPost.findOne({ _id: req.params.id });
+        if (UserId) {
+
+            var Blog = req.body.blog;
+            var Picture = req.file.filename;
+            UserId.Blog = { Picture, Blog }
+            // console.log(usersPost)
+            await UserId.save()
+            res.json({
+                status: "success",
+                data: UserId
+            });
         }
         else {
-            console.log("id not founded")
+            res.json("id is not valid");
         };
     }
     else {
-        console.log("data is not founded you need to login firts")
+        res.status(401).json({
+            message:"user not Authorization"
+        });
     };
 };
 
-exports.Comment = async (req, res) => {
-    var user_email = req.user.Email;
-    // console.log(user_email);
-    // finding the email address is in a database or not because should be login before like or dislike the post
-    var userDetails = await User.findOne({ user_email: user_email });
-    if (userDetails) {
-        var comment = req.body.comment
-        var wordCount = comment.match(/(\w+)/g).length;
-        if (wordCount <= 100) {
-            var Id = req.body.id;
-            //finding the post is exits in our database or not? by the post id
-            var searchId = await usersPost.findOne({ _id: Id });
-            if (searchId) {
-                // console.log(searchId)
-                var Usercomment = comment;
-                // console.log(Usercomment)
-                searchId.Comment.push(Usercomment)
-                await searchId.save()
-                res.send({
-                    status: "success",
-                    data: searchId
-                });
-            }
-            else {
-                console.log("id not founded please enter right id");
-            };
-        }
-        else {
-            console.log("comment should be less than and equal to 100 words")
-        }
-    }
-    else {
-        console.log("data is not there");
-    };
-};
+//In this post's admin only can delete the post
 
+exports.deletePost = async (req, res) => {
 
-exports.EditPost = async (req, res) => {
-    var Email = req.body.email;
-    var userDetails = await usersPost.findOne({ user_email: Email });
-    // console.log(userDetails);
-    if (userDetails) {
-        var Blog = req.body.blog;
-        var Picture = req.file.filename;
-        userDetails.Blog = { Picture, Blog }
-        await userDetails.save()
-                res.send({
-                    status: "success",
-                    data: userDetails
-                });
-    }
-    else {
-        console.log("data is not founded")
-    };
-};
-
-exports.deletePost = async(req,res)=>{
-    var Email = req.body.email;
-    var userDetails = await usersPost.findOne({ user_email: Email });
+    var userDetails = await usersPost.find({ user_email: req.user.Email });
     if (userDetails) {
         // console.log(userDetails);
-        usersPost.deleteOne(userDetails, function(err) {
-            if (err) throw err;
-            console.log("1 document deleted");
-          });
-        
-        res.send({
-            status:"deleted successfully"
-        })
-        
+        var UserId = await usersPost.findOne({ _id: req.params.id });
+        // console.log(UserId)
+        if (UserId) {
+            // console.log(UserId)
+            usersPost.deleteOne(UserId, function (err, result) {
+                if (err) throw err;
+                if (result != 0) {
+                    res.json("1 document deleted");
+                }
+                else {
+                    res.json("document has not deleted");
+                };
+            });
+        }
+        else {
+            res.json("id is not valid");
+        };
     }
     else {
-        console.log("data is not founded")
-    };
-
-};
-
-
-exports.UserProfileAndPost = async(req,res)=>{
-   try{ 
-       var user_email = req.user.Email;
-    // console.log(user_email);
-    // finding the email address is in a database or not because should be login before like or dislike the post
-        var userDetails = await User.findOne({ user_email: user_email });
-        if(userDetails){
-            const posts = await usersPost.find()
-            res.json(posts);
-        }
-        else{
-            res.send("data is not founded");
-        }
-    }catch{
-        res.send("do login first");
+        res.status(401).json({
+            message:"user not Authorization"
+        });
     };
 };
+
+//User can see specific post which he want after login
+
+
+

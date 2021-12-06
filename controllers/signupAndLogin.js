@@ -1,8 +1,6 @@
 const express = require("express");
-const mongoose = require('mongoose');
 const User = require("../db_connection/userTable");
 const nodemailer = require("nodemailer");
-const crypto = require("crypto")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookie = require("cookie-parser");
@@ -12,265 +10,114 @@ app.use(cookie())
 app.use(express.json());
 
 
-
+// This Api we will use for Signup
 
 exports.signUp = (req, res) => {
-    try {
-        var transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'kritika19@navgurukul.org',
-                pass: 'lovekrishna'
-            }
-        });
 
-        var mailOptions = {
-            from: 'kritika19@navgurukul.org',
-            to: req.body.user_email,
-            subject: 'verification of email',
-            text: 'check email is valid or not'
-        };
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(req.body.user_email)) {
+        User.findOne({ user_email: req.body.user_email }).exec(async (err, user) => {
+            if (user) {
+                res.json({ error: "User is already exits with this email address" })
+            };
 
-        transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log("verification has been sent on your registered emailId")
-                var Email = req.body.user_email;
-                User.findOne({ user_email: Email }).exec((err, user) => {
-                    if (user) {
-                        res.send({ error: "User with this email already exits" })
-                    }
-                    var user_password = req.body.user_password
-                    var confirm_password = req.body.confirm_password
-                    if (user_password === confirm_password) {
-                        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(Email)) {
+            // var transporter = nodemailer.createTransport({
+            //     service: 'gmail',
+            //     auth: {
+            //         user: 'kritika19@navgurukul.org',
+            //         pass: 'lovekrishna'
+            //     }
+            // });
 
-                            var Useremail = Email;
-                            function isUpper(str) {
-                                return /[A-Z]/.test(str);
-                            };
-                            function hasLowerCase(str) {
-                                return (/[a-z]/.test(str));
-                            };
-                            function hasSpecialcorrector(myString) {
-                                return (/[@,#,$,&]/.test(myString));
-                            };
-                            function hasNumber(myString) {
-                                return (/[0-9]/.test(myString));
-                            };
-                            async function checkYourPassword(user_password) {
-                                if (user_password.length >= 8 && user_password.length <= 12) {
+            // transporter.sendMail({
+            //     to: req.body.user_email,
+            //     from: 'kritika19@navgurukul.org',
+            //     subject: 'This mail is only for verification is mail right or not?'
+            // });
 
-                                    if (hasLowerCase(user_password)) {
-
-                                        if (isUpper(user_password)) {
-
-                                            if (hasSpecialcorrector(user_password)) {
-
-                                                if (hasNumber(user_password)) {
-                                                    let password = user_password
-                                                    console.log("wow finally you created a strong and secure password for your account: ")
-                                                    var haspassword = await bcrypt.hash(password, saltRounds);
-                                                    var user_details = {
-                                                        user_name: req.body.user_name,
-                                                        user_email: Useremail,
-                                                        user_gender: req.body.user_gender,
-                                                        user_profilePic: req.file.filename,
-                                                        user_location: req.body.user_location,
-                                                        user_password: haspassword
-                                                    };
-
-                                                    let userModel = new User(user_details);
-                                                    await userModel.save();
-                                                    res.json(userModel);
-                                                    console.log("Email is valid")
-                                                } else {
-                                                    console.log("in it one numeric also should be there: ")
-                                                };
-                                            } else {
-                                                console.log("There should be one special corrector for making your password more secure: ")
-                                            };
-                                        } else {
-                                            console.log("your password should be have one capital letter: ")
-                                        };
-                                    } else {
-                                        console.log("it should be have small corrector: ");
-                                    };
-                                } else {
-                                    console.log("Password Length should be maximum 8 and lessthan 12: ");
-                                };
-                            };
-                            checkYourPassword(user_password);
-                        }
-                        else {
-                            console.log("your email is not valid")
-                        };
-                    } else {
-                        console.log("Both password are not same please enter same passowrd")
+            if (req.body.user_password === req.body.confirm_password) {
+                if (req.body.user_password.match(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})"))) {
+                    var Payload = {
+                        user_name: req.body.user_name,
+                        user_email: req.body.user_email,
+                        user_gender: req.body.user_gender,
+                        user_profilePic: req.file.filename,
+                        user_location: req.body.user_location,
+                        user_password: await bcrypt.hash(req.body.user_password, saltRounds)
                     };
 
+                    let userModel = new User(Payload);
+                    await userModel.save();
+
+                    res.status(201).json({
+                        message: "Your account has created.....",
+                        //mail: "Verification mail has sent on your mail"
+                    });
+
+                } else {
+                    res.status(203).json({
+                        message:"password should have([@,#,$,&],[0-9],[A-z].....)"
+                    })
+                };
+
+            } else {
+                res.status(203).json({
+                    message:"confirm password is not same....."
                 });
             };
         });
-
     }
-    catch {
-        res.send({ status: "error" })
-    }
+    else {
+        res.status(203).json({
+            message:"this email address is not valid...."
+        });
+    };
 };
 
+//This is for user Login
 
 exports.login = async (req, res) => {
     try {
-        var transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'kritika19@navgurukul.org',
-                pass: 'lovekrishna'
-            }
-        });
+        var userDetails = await User.findOne({ user_email: req.body.user_email })
 
-        var mailOptions = {
-            from: 'kritika19@navgurukul.org',
-            to: req.body.user_email,
-            subject: 'verification of email',
-            text: 'check email is valid or not'
-        };
+        if (userDetails) {
+            bcrypt.compare(req.body.user_password, userDetails["user_password"], (err, data) => {
+                if (err) throw err
 
-        transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-            }
-            else {
-                console.log("verification has been sent on your registered emailId")
-                const user_email = req.body.user_email;
-                var userDetails = User.findOne({ user_email: user_email }).
+                if (data) {
 
-                    then((result) => {
+                    if (userDetails) {
 
-                        var password = result["user_password"];
+                        var token = jwt.sign({ Email: userDetails["user_email"] }, "loginToken", {
 
-                        // console.log(password)
-
-                        bcrypt.compare(req.body.user_password, password, (err, data) => {
-                            //if error than throw error
-                            if (err) throw err
-
-                            //if both match than you can do anything
-                            // console.log(data)
-                            if (data) {
-                                if (result.length != 0) {
-
-                                    var Email = result["user_email"];
-
-                                    var token = jwt.sign({ Email }, "loginToken", {
-
-                                        expiresIn: '365d'
-                                    });
-                                    res.cookie("token", token).json({
-
-                                        message: "user Founded",
-                                        user: token
-                                    })
-                                } else {
-                                    res.send("data is not there ");
-                                };
-                            } else {
-                                res.status(401).send({ msg: "Invalid credencial" })
-                            };
-
+                            expiresIn: '365d'
                         });
-                    }).
-                    catch((err) => {
-                        res.send(err)
-                    });
-            }
-        });
+                        res.cookie("token", token).json({
+                            status: "you login successfully....",
+                            cookie: token
+                        });
+                    } else {
+                        res.status(204).json({
+                            message:"Data is not exits...."
+                        });
+                    };
+                } else {
+                    res.status(401).json({ msg: "Invalid credencial...." });
+                };
 
+            });
+        } else {
+            res.status(401).json({
+                message:"user not Authorization...",
+            });
+            // res.redirect("../")
+        };
     }
     catch (error) {
-        res.send({
-            status: "error",
-            message: error
+        res.status(401).json({
+            message:"something went wrong...."
         });
     };
 };
 
-exports.sendMail = (req, res) => {
-    crypto.randomBytes(32, (err, buffer) => {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            const token = buffer.toString("hex");
-            // console.log(token)
-            User.findOne({ user_email: req.body.user_email })
-                .then((user) => {
-                    // console.log(user)
-                    if (!user) {
-                        return res.status(404).json({ error: "user doesn't exits with this email address" })
-                    };
-                    user.resetToken = token
-                    user.expireToken = Date.now() + 3600000
-                    user.save().then((result) => {
-                        var transporter = nodemailer.createTransport({
-                            service: 'gmail',
-                            auth: {
-                                user: 'kritika19@navgurukul.org',
-                                pass: 'lovekrishna'
-                            }
-                        });
-                        transporter.sendMail({
-                            to: user.user_email,
-                            from: 'kritika19@navgurukul.org',
-                            subject: 'Reset Password Email',
-                            text: token
-                        })
-                        res.send({ message: "check your mail" });
-                    })
-                })
-                .catch((err) => {
-                    res.send(err)
-                });
-        };
-    });
-};
 
-exports.forgetPassword = async (req, res) => {
-
-    const userData = await User.findOne({ user_email: req.body.user_email });
-    // console.log(userData);
-    if (userData) {
-        // console.log(userData)
-        let currentTime = new Date().getTime();
-        let timeLimit = userData.expireToken - currentTime;
-        // console.log(userData.expireToken)
-        // console.log(timeLimit)
-        if (timeLimit < 0) {
-            res.send({
-                status: "error",
-                message: "Email is expired"
-            });
-        }
-        else {
-            let user = await User.findOne({ user_email: req.body.user_email });
-            let password = req.body.user_password;
-            var haspassword = await bcrypt.hash(password, saltRounds);
-            user.user_password = haspassword
-            user.save();
-            res.send({
-                message: "Your password has been changed successfully",
-                status: "success"
-            });
-
-        };
-    }
-    else {
-        res.send({
-            status: "error",
-            message: "otp is invalid"
-        });
-    };
-};
 

@@ -2,34 +2,37 @@ const mongoose = require('mongoose');
 
 const userData = new mongoose.Schema({
     user_name:{
-        type: 'string',
+        type: String,
         required: true
     },
     user_email:{
-        type: 'string',
+        type: String,
         required: true
     },
     user_gender:{
-        type: 'string',
+        type: String,
         required: true
     },
     user_profilePic:{
-        type: 'string',
+        type: String,
         required: true
     },
     user_location:{
-        type: 'string',
+        type:String,
         required: true
     },
     user_password:{
-        type: 'string',
+        type: String,
         required: true
-    },
-    resetToken:String,
-    expireToken:Date,
+    }
+},
+    {timestamps:true
 });
 
 const postdata = mongoose.model('UserDetails',userData);
 
 
 module.exports = postdata;
+
+
+// table schema for storing the user data while signup in database
