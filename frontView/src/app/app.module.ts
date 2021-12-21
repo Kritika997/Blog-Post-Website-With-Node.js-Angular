@@ -17,7 +17,8 @@ import { ForgetpasswordComponent } from './userDetails/forgetpassword/forgetpass
 import { OtpverificationComponent } from './userDetails/otpverification/otpverification.component';
 import { PostCreateComponent } from './postUI/post-create/post-create.component';
 import { HomepageComponent } from './userDetails/homepage/homepage.component';
-import { UserlikeComponent } from './postUI/userlike/userlike.component';
+import { EditPostComponent } from './postUI/edit-post/edit-post.component';
+import { CommentComponent } from './postUI/comment/comment.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { UserlikeComponent } from './postUI/userlike/userlike.component';
     OtpverificationComponent,
     PostCreateComponent,
     HomepageComponent,
-    UserlikeComponent,
+    EditPostComponent,
+    CommentComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,13 +46,13 @@ import { UserlikeComponent } from './postUI/userlike/userlike.component';
       { path: 'forgetpassword', component: ForgetpasswordComponent },
       { path: 'otpverification', component:OtpverificationComponent },
       { path: 'createpost', component:PostCreateComponent},
-      { path: 'homepage', component:HomepageComponent}
+      { path: 'homepage', component:HomepageComponent},
+      { path: 'editpost/:id', component:EditPostComponent},
+      { path: 'commentpost/:id', component:CommentComponent}
     ])
 
   ],
-  // providers: [
-  //   { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorComponent, multi: true },
-  // ],
+  // providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,6 +1,6 @@
 const express = require("express");
-const User = require("../db_connection/userTable");
-const otp = require("../db_connection/otpTable");
+const User = require("../model/userTable");
+const otp = require("../model/otpTable");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken")
 const cookie = require("cookie-parser");
@@ -41,11 +41,11 @@ exports.forgetpassword = async (req, res) => {
             subject: 'your one Time password',
             text: `${otpCode}`
         });
-        var token = jwt.sign({ Email: userDetails["user_email"] }, "userVerify", {
+        var token = jwt.sign({ Email: userDetails["user_email"], Id:userDetails["_id"] }, "userVerify", {
 
             expiresIn: '1h'
         });
-        res.cookie("validation", token).json({
+        return res.cookie("validation", token).json({
             status: "token created",
             message: "OTP created successfully",
             cookie: token
@@ -53,7 +53,7 @@ exports.forgetpassword = async (req, res) => {
 
 
     } else {
-        res.status(401).json({
+        return res.status(401).json({
             message:"user not Authorization"
         });
     };
@@ -71,7 +71,7 @@ exports.otpverification = async (req, res) => {
         // console.log(timeLimit)
 
         if (timeLimit < 0) {
-            res.status(410).json({
+            return res.status(410).json({
                 message: "OTP is expired"
             });
         }
@@ -87,19 +87,19 @@ exports.otpverification = async (req, res) => {
                     // console.log(haspassword)
                     user.user_password = haspassword
                     user.save();
-                    res.status(200).json({
+                    return res.status(200).json({
                         message: "Your password has been changed successfully"
                     });
                 }
                 else {
-                    res.json({
+                    return res.json({
                         message:"both password are not same"
                     })
                 };
 
             }
             else {
-                res.json({
+                return res.json({
                     message:"password shoul have [0-9],[@,$,#],[A-z]"
                 });
             };
@@ -107,7 +107,7 @@ exports.otpverification = async (req, res) => {
         };
     }
     else {
-        res.status(401).json({
+        return res.status(401).json({
             message: "otp is invalid"
         });
     };

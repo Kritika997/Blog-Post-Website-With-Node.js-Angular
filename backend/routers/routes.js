@@ -19,18 +19,18 @@ route.post("/otpverification", otpToken, changePassword.otpverification);
 
 route.post("/createPost", multerFile.single('testimage'), Middleware, contPost.createPost);
 
-route.get("/seeAllPost", contPost.seeAllPost);
+// route.get("/seeAllPost", contPost.seeAllPost);
 
-route.post("/LikePost/:id", Middleware, likeOrDislike.LikePost);
+route.get("/likePost/:id", Middleware, likeOrDislike.likePost);
 
 route.post("/Comment/:id", Middleware, likeOrDislike.Comment);
 
 route.delete("/deleteComment/:id", Middleware, likeOrDislike.deleteComment);
 
-route.put("/EditPost/:id", multerFile.single('testimage'), Middleware, contPost.EditPost);
+route.put("/editPost/:id", multerFile.single('testimage'), Middleware, contPost.editPost);
 
 route.delete("/deletePost/:id", Middleware, contPost.deletePost);
 
-route.get("/userPostAllDetails", postAllDetails.userPostAllDetails);
+route.get("/usersPosts", postAllDetails.usersPosts);
 
 module.exports = route;

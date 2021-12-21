@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { BlogPostService } from 'src/app/services';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { baseUrl } from 'src/environments/environment';
-
 
 @Component({
   selector: 'app-otpverification',
@@ -14,7 +11,7 @@ import { baseUrl } from 'src/environments/environment';
 export class OtpverificationComponent implements OnInit {
 
   otpform: any
-  constructor(private http: HttpClient, public router: Router) { }
+  constructor(public router: Router, private userService: BlogPostService) { }
 
   ngOnInit(): void {
     this.otpform = new FormGroup({
@@ -24,24 +21,19 @@ export class OtpverificationComponent implements OnInit {
     });
 
   }
-  
+
   otpverification() {
     if (this.otpform.valid) {
-      // console.log(this.otpform.value)
 
-      this.http.post(`${baseUrl}/otpverification`, this.otpform.value,{headers: new HttpHeaders(
-        { 'Authorization': `${localStorage.getItem("token")}`}
-      )
-      }).subscribe((result) => {
+      this.userService.otpVerificaton(this.otpform.value,).subscribe((result: any) => {
+        if (result.error) {
+          console.log(result)
 
-        console.log(result);
-        if ({ message: "Your password has been changed successfully" }) {
-          alert("Your Password Has Been Changed SUccessfully...");
-          this.router.navigateByUrl('/login')
         }
         else {
-          alert("try again..")
+          this.router.navigateByUrl('/login');
         }
+
       })
     }
   };

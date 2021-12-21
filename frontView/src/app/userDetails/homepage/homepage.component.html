@@ -2,53 +2,104 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- <title>Bootstrap Navbar with Inline Login Form in Dropdown</title> -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <!-- Bootstrap CSS -->
+<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css'>
+<!-- Font Awesome CSS -->
+<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'>
+<!-- jQuery -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<!-- Bootstrap JS -->
+<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
 
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a href="#" class="navbar-brand">Brand<b>Name</b></a>
-        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
-            <div class="navbar-nav">
-
-
-
-                <a href="/createpost" class="nav-item nav-link">Create Post</a>
-
-            </div>
-            <form class="navbar-form form-inline search-form">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search...">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
-                    </span>
-                </div>
+    <nav class="navbar navbar-default navbar-inverse" role="navigation">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <!-- <a class="navbar-brand" href="#">Login dropdown</a> -->
+          </div>
+      
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Link</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" >
+              <h2 style="font-size:30px;color:rgb(19, 7, 2)"> BlogPostWebsite </h2>
             </form>
-            <div class="navbar-nav ml-auto">
-                <div class="nav-item dropdown login-dropdown">
-                    <a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle"><i
-                            class="fa fa-user-o"></i>
-                        LogOut</a>
-                    
-                </div>
-            </div>
-        </div>
-    </nav>
-
+            <ul class="nav navbar-nav navbar-right">
+              <li><p class="navbar-text"><i class="fa fa-plus-square-o" style="font-size:25px;color:rgb(0, 140, 255)"></i><a href="/createpost"><b>Create Post</b> </a></p></li>
+              <li class="dropdown">
+                
+              </li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>
     
+    <div class="container" >
+        
+
+        <tr>
+            
+            <th scope="col"><h3>Users Posts</h3></th>
+        </tr>
+
+        <tr *ngFor="let obj of postList;">
+          
+            <div class="card">
+                <div  *ngFor="let user of obj.WhoCreated">
+                    <h4>Creted By</h4><div>{{user.user_name}}</div>
+                </div>
+                <img [src]=" obj.Picture? image+obj.Picture: 'uploads'" alt="Avatar" style="width:30%">
+                <div class="container">
+                
+                </div>
+                <p style="color:#000000" style="font-size:20px" style="width:30%">
+                    <td>{{obj.Blog}}</td>
+    
+                </p>
+
+                <div>
+                    <td><a (click)="likepost(obj._id)"><i class="fa fa-thumbs-up" style="font-size:40px;color:rgb(0, 132, 255); cursor: pointer;" > </i></a></td>
+                
+            
+                <td><a routerLink="/commentpost/{{obj._id}}"><i  class="fa fa-comment" style="font-size:40px;color:rgb(30, 255, 0); cursor: pointer;"> </i></a></td>
+
+                <!-- <div class="search">
+                  <input placeholder="Write a comment" type="text">
+                  <button><i class="fa fa-plus"></i></button>
+                 </div>
+     -->
+                
+                
+    
+                    <td><a (click)="deletePost(obj._id)"><i class="fa fa-remove" style="font-size:40px;color:rgb(255, 8, 0); cursor: pointer;" > </i></a></td>
+    
+                
+                 
+                
+    
+                    <td><a routerLink="/editpost/{{obj._id}}"><i class="fa fa-edit" style="font-size:40px;color:rgb(0, 68, 255); cursor: pointer;"> </i></a></td>
+                </div> 
+    
+            </div>
+            
+            
+            
+           
+               
+        </tr>
+
+    </div>
 </body>
 
 </html>

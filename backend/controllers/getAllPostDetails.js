@@ -1,10 +1,10 @@
-const User = require("../db_connection/userTable")
-const usersPost = require("../db_connection/postTable");
-const commentTable = require("../db_connection/commentTab");
-const LikeSchema = require("../db_connection/LikesSchema");
-const connect = require("../db_connection/db_connect")
+const User = require("../model/userTable")
+const usersPost = require("../model/postTable");
+const commentTable = require("../model/commentTab");
+const LikeSchema = require("../model/LikesSchema");
+const connect = require("../model/db_connect")
 
-exports.userPostAllDetails = async (req, res) => {
+exports.usersPosts = async (req, res) => {
 
     await usersPost.aggregate([
  
@@ -45,10 +45,10 @@ exports.userPostAllDetails = async (req, res) => {
     ])
       .exec((err, result) => {
         if (err) {
-          res.jaon("data is not there");
+          return res.json("data is not there");
         }
         else {
-          res.json(result);
+         return res.json(result);
         };
       });
 };

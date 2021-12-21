@@ -1,20 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 // import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { baseUrl } from 'src/environments/environment';
-
+// import { BlogPostService } from 'src/app/services';
+import { BlogPostService } from 'src/app/services';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-
-
+  dublicatEntry:Boolean = false
+  
   file:any 
-  constructor(private http: HttpClient , public router : Router ) {}
+  constructor(private userService: BlogPostService ) {}
   registerform:any
 
   ngOnInit(): void {
@@ -32,11 +30,11 @@ export class RegisterComponent implements OnInit {
 
   upload(event:any){
     this.file = event.target.files[0]
-
   }
   
   register(){
     if(this.registerform.valid){
+      // console.log(this.registerform.value)
       let user_data : FormData = new FormData();
       user_data.append("user_name",this.registerform.value.user_name)
       user_data.append("user_email",this.registerform.value.user_email)
@@ -47,22 +45,8 @@ export class RegisterComponent implements OnInit {
       user_data.append("confirm_password",this.registerform.value.confirm_password)
 
       console.log(user_data);
+      const user = this.userService.userRegister(user_data)
       
-      this.http.post(`${baseUrl}/signup`,user_data).subscribe((result) => {
-
-        console.log(result);
-        
-        if({message: 'Your account has created.....'}){
-          alert("Your Account Has Created Successfully...");
-          this.router.navigateByUrl('/login')
-        }
-        else{
-          alert(
-            "Please try again"
-          ); 
-          
-        }
-      })
     }
     
   };

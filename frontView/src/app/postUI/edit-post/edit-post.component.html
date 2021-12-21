@@ -1,0 +1,45 @@
+
+    <section class="h-100 bg-dark">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col">
+            <div class="card card-registration my-4">
+              <div class="row g-0">
+                <div class="col-xl-6 d-none d-xl-block">
+                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
+                    alt="Sample photo" class="img-fluid"
+                    style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
+                </div>
+                <form [formGroup]="editPostForm" class="col-xl-6">
+    
+                  <div class="card-body p-md-8 text-black">
+                    <h3 class="mb-5 text-uppercase">Edit Post Form</h3>
+    
+                    <div class="form-outline mb-4">
+                      <label class="form-label" for="form3Example1cg">Edit Your Post Here</label>
+                      <textarea rows="5" formControlName="Blog" class="form-control form-control-lg" ></textarea>
+                      <div style="color:red" *ngIf="editPostForm.get('Blog').invalid && (editPostForm.get('Blog').dirty || editPostForm.get('Blog').touched)">
+                        Post is required.
+                      </div>
+                    </div>
+  
+                  <div class="form-outline mb-4">
+                    <input type="file" id="form3Example3cg" formControlName="Picture" (change)="upload($event)" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example3cg">Update Your Picture</label>
+                    
+                  </div>
+  
+      
+                      <div class="d-flex justify-content-center">
+                        <button type="button" [disabled]="editPostForm.invalid" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="updatepost()">Submit</button>
+                      </div>
+                  </div>
+                  
+    
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>

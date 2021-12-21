@@ -1,8 +1,8 @@
 const express = require("express");
 const mongoose = require('mongoose');
 const multer = require("multer");
-const User = require("../db_connection/userTable")
-const usersPost = require("../db_connection/postTable");
+const User = require("../model/userTable")
+const usersPost = require("../model/postTable");
 // const { log } = require("console");
 const app = express();
 app.use(express.json());
@@ -19,44 +19,42 @@ exports.createPost = async (req, res) => {
         var userDetails = await User.findOne({ user_email: req.user.Email });
         // console.log(userDetails)
         if (userDetails) {
-            // console.log(userDetails)  
-
+            
             var wordCount = req.body.Blog.match(/(\w+)/g).length;
-            // console.log(req.body) 
 
+            // console.log(req.file);
             if (wordCount <= 200) {
                 const postData = {
                     UserId: userDetails["_id"],
                     Blog: req.body.Blog,
-                    Picture:req.file.filename,
-                    Like: req.body.Like,
+                    Picture: req.file.path,
+                    Like: 0
                 };
 
                 let data = new usersPost(postData);
                 await data.save();
 
-                res.status(201).json({
+                return res.status(201).json({
                     message: "Post created successfully...."
                 });
             }
             else {
 
-                console.log("Blog size should be equal and less than 200....")
-                res.json({
-                    message:"Blog size should be equal and less than 200...."
+                // console.log("Blog size should be equal and less than 200....")
+                return res.status(401).json({
+                    message: "Blog size should be equal and less than 200...."
                 });
             };
 
         } else {
-            res.status(401).json({
-                message:"user not Authorization"
+            return res.status(401).json({
+                message: "user not Authorization"
             });
-            
+
         };
     }
     catch (err) {
-        console.log("yo")
-        res.status(400).json({
+        return res.status(400).json({
             message: "error"
         });
     };
@@ -65,60 +63,60 @@ exports.createPost = async (req, res) => {
 
 // With this API user can see all post without login or signup
 
-exports.seeAllPost = async (req, res) => {
-    try {
-        const posts = await usersPost.find()
-        res.status(200).json({
-            data:posts
-        });
-    }
-    catch (error) {
-        res.status(400).json({
-            message:error
-        });
-    };
-}
+// exports.seeAllPost = async (req, res) => {
+//     try {
+//         const posts = await usersPost.find()
+//         res.status(200).json({
+//             data: posts
+//         });
+//     }
+//     catch (error) {
+//         res.status(400).json({
+//             message: error
+//         });
+//     };
+// }
 
 
 // Only Admin can update the post which he created
 
-exports.EditPost = async (req, res) => {
+exports.editPost = async (req, res) => {
+    // console.log(req)
+    userData = await usersPost.find({ UserId: req.user.ID })
 
-    // let userData = await getUserPost()
-    userData = await usersPost.find({ user_email: req.user.Email })
-
-    if (userData) {
+    if (userData) { 
         var UserId = await usersPost.findOne({ _id: req.params.id });
+        // console.log(UserId)  
         if (UserId) {
 
-            var Blog = req.body.blog;
-            var Picture = req.file.filename;
-            UserId.Blog = { Picture, Blog }
-            // console.log(usersPost)
+            var Blog = req.body.Blog;
+            var Picture = req.file.path;
+            UserId.Blog = Blog
+            UserId.Picture = Picture
+
             await UserId.save()
-            res.json({
-                status: "success",
+            return res.status(200).json({
+                message: "success",
                 data: UserId
             });
         }
         else {
-            res.json("id is not valid");
+            return res.status(400).json("id is not valid");
         };
     }
     else {
-        res.status(401).json({
-            message:"user not Authorization"
+        return res.status(401).json({
+            message: "user not Authorization"
         });
     };
 };
-
+   
 //In this post's admin only can delete the post
 
 exports.deletePost = async (req, res) => {
 
-    var userDetails = await usersPost.find({ user_email: req.user.Email });
+    var userDetails = await usersPost.find({ UserId: req.user.ID });
     if (userDetails) {
-        // console.log(userDetails);
         var UserId = await usersPost.findOne({ _id: req.params.id });
         // console.log(UserId)
         if (UserId) {
@@ -126,20 +124,23 @@ exports.deletePost = async (req, res) => {
             usersPost.deleteOne(UserId, function (err, result) {
                 if (err) throw err;
                 if (result != 0) {
-                    res.json("1 document deleted");
+                    
+                    return res.status(200).json({
+                        message: "1 document deleted"
+                    });
                 }
                 else {
-                    res.json("document has not deleted");
+                    return res.json("document has not deleted");
                 };
             });
         }
         else {
-            res.json("id is not valid");
+            return res.json("id is not valid");
         };
     }
     else {
-        res.status(401).json({
-            message:"user not Authorization"
+        return res.status(401).json({
+            message: "user not Authorization"
         });
     };
 };

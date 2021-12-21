@@ -1,19 +1,20 @@
-const commentTable = require("../db_connection/commentTab");
+const commentTable = require("../model/commentTab");
 const express = require("express");
-const User = require("../db_connection/userTable")
-const usersPost = require("../db_connection/postTable");
-const LikeSchema = require("../db_connection/LikesSchema")
+const User = require("../model/userTable")
+const usersPost = require("../model/postTable");
+const LikeSchema = require("../model/LikesSchema")
 
 
 // In this we are allowing to user do comment on his/her post on their faivorte post 
 
-exports.LikePost = async (req, res) => {
+exports.likePost = async (req, res) => {
 
-    var userDetails = await User.findOne({ user_email: req.user.Email });
+    var userDetails = await User.find({user_email: req.user.Email });
+    // console.log(req.user)    
     if (userDetails) {
         var postId = await usersPost.findOne({ _id: req.params.id });
         if (postId) {
-            // console.log(postId["_id"])
+            // console.log(postId)
             var findUserId = await LikeSchema.find({ UserId: userDetails["_id"] });
             // console.log(findUserId)
 
@@ -31,8 +32,8 @@ exports.LikePost = async (req, res) => {
                 postId.Like = like
                 await postId.save()
                 await likes.save()
-                res.status(200).json({
-                    status: `${userDetails["user_name"]} has liked the post`,
+                return res.status(200).json({
+                    status: ` user has liked the post`,
                     data: likes
                 });
 
@@ -57,30 +58,30 @@ exports.LikePost = async (req, res) => {
                     postId.Like = like
                     await postId.save()
                     await likes.save()
-                    res.status(200).json({
+                    return res.status(200).json({
                         message: `${userDetails["user_name"]} has liked the post`
                     });
                 }
                 else {
-                    res.json({
+                    return res.status(401).json({
                         message: `${userDetails["user_name"]} has already liked this post`
                     });
                 }
 
             } else {
-                res.json({
+                return res.status(404).json({
                     message: `${userDetails["user_name"]} has already liked this post`
                 });
             };
         }
         else {
-            res.status(401).json({
+            return res.status(401).json({
                 message:"This Post Id is not exits"
             });
         };
     }
     else {
-        res.status(401).json({
+        return res.status(401).json({
             message:"user not Authorization"
         });
     };
@@ -92,6 +93,8 @@ exports.Comment = async (req, res) => {
     var userDetails = await User.find({ user_email: req.user.Email });
 
     if (userDetails.length != 0) {
+        // console.log(req)
+        // console.log(userDetails);
 
         var wordCount = req.body.comment.match(/(\w+)/g).length;
 
@@ -111,24 +114,24 @@ exports.Comment = async (req, res) => {
                 var comments = new commentTable(userComment);
                 // console.log(comments)
                 await comments.save()
-                res.status(200).json({
+                return res.status(200).json({
                     message: "you commented"
                 });
             }
             else {
-                res.status(401).json({
+                return res.status(401).json({
                     message:"id not founded please enter right id"
                 });
             };
         }
         else {
-            res.json({
+            return res.json({
                 message:"comment should be less than and equal to 100 words"
             });
         };
     }
     else {
-        res.status(401).json({
+        return res.status(401).json({
             message:"user not Authorization"
         });
     };
@@ -148,24 +151,24 @@ exports.deleteComment = async (req, res) => {
             commentTable.deleteOne(commitId[0], function (err, result) {
                 if (err) throw err;
                 if (result != 0) {
-                    res.status(200).json({
+                    return res.status(200).json({
                         message:"1 comment deleted"
                     });
                 }
                 else {
-                    res.status(303).json({
+                    return res.status(303).json({
                         message:"comment has not deleted"
                     });
                 };
             });
         } else {
-            res.json({
+            return res.json({
                 message:"id is not valid"
             });
         };
 
     } else {
-        res.status(401).json({
+        return res.status(401).json({
             message:"user not Authorization"
         });
     };
