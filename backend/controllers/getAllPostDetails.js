@@ -1,54 +1,54 @@
-const User = require("../model/userTable")
 const usersPost = require("../model/postTable");
-const commentTable = require("../model/commentTab");
-const LikeSchema = require("../model/LikesSchema");
-const connect = require("../model/db_connect")
+
 
 exports.usersPosts = async (req, res) => {
+  let count = await usersPost.count();
+  let { page, limit } = req.query 
+  
+  await usersPost.aggregate([
 
-    await usersPost.aggregate([
- 
+    {
+      $lookup:
       {
-        $lookup:
-        {
-          from: "userdetails",
-          localField: "UserId",
-          foreignField: "_id",
-          as: "WhoCreated",
-          
-        },
-        
+        from: "userdetails",
+        localField: "UserId",
+        foreignField: "_id",
+        as: "WhoCreated",
+
       },
 
-      {
-        $lookup: {
-          from: "usercomments",
-          localField: "_id",
-          foreignField: "PostId",
-          as: "comments",
-        },  
-      },
+    },
 
-      // {
-      //   comments
-      // }
-    
-      {
-        $lookup: {
-          from: "liketabs",
-          localField: "_id",
-          foreignField: "PostId",
-          as: "likes"
-        },
+    {
+      $lookup: {
+        from: "usercomments",
+        localField: "_id",
+        foreignField: "PostId",
+        as: "comments",
       },
+    },
 
-    ])
-      .exec((err, result) => {
-        if (err) {
-          return res.json("data is not there");
-        }
-        else {
-         return res.json(result);
-        };
-      });
+    {
+      $lookup: {
+        from: "liketabs",
+        localField: "_id",
+        foreignField: "PostId",
+        as: "likes"
+      },
+    },
+
+  ])
+    .skip((page - 1) * limit).limit(limit * 1)
+    .exec((err, result) => {
+      if (err) {
+        return res.send("data is not there");
+      }
+      else {
+        // console.log(result)
+        return res.status(200).send({
+          data: result,
+          postCount: count
+        });
+      };
+    });
 };

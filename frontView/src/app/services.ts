@@ -1,57 +1,65 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { baseUrl } from 'src/environments/environment';
-// import { Console } from 'console';
-
-
 @Injectable({
   providedIn: 'root'
 })
 export class BlogPostService {
 
-  constructor(private http: HttpClient, public router: Router) { }
+  constructor(private http: HttpClient, public router: Router,/* private toastr: ToastrService */) { }
 
+  loggedIn() {
+    return !! localStorage.getItem('usertoken')
+  }
 
   userRegister(user:any){
-    this.http.post(`${baseUrl}/signup`,user).subscribe((result:any) => {
+    return this.http.post(`${baseUrl}/signup`,user)
+  }
+  
+  editpost(id:any,data:any){
 
-      console.log(result);
-      
-      if(result.error){
-        console.log(result)
-        
-      }
-      else{
-        this.router.navigateByUrl('/login');
-        
-      };
+    return this.http.put(`${baseUrl}/editPost/${id}`, data,{
+      headers: new HttpHeaders(
+        { 'Authorization': `${localStorage.getItem("usertoken")}` }
+      )
     })
   }
 
-  loginUser(data:any){
-    this.http.post(`${baseUrl}/login`,data).subscribe((result:any) => {
-      // console.log(result)
-
-      
-
-      if(result.error){
-        console.log(result)
-        // alert(result.error["msg"])
-        
-      }
-      else{
-        localStorage.setItem ('usertoken', result.cookie);
-        this.router.navigateByUrl('/homepage')
-      };
-      
+  deletepost(id: any) {
+    return this.http.delete(`${baseUrl}/deletePost/${id}`,{
+      headers: new HttpHeaders(
+        {'Authorization': `${localStorage.getItem("usertoken")}`}
+      )
     });
+  };
+
+  deleteUser(id: any) {
+
+    return this.http.delete(`${baseUrl}/userDelete/${id}`,{
+      headers: new HttpHeaders(
+        {'Authorization': `${localStorage.getItem("usertoken")}`}
+      )
+    });
+  };
+
+
+  loginUser(data:any){
+    return this.http.post(`${baseUrl}/login`,data)
   }
+
 
   forgetPassword(result:any){
     return this.http.post(`${baseUrl}/forgetpassword`,result);
       
+  }
+
+  changePassword(result:any){
+    return this.http.post(`${baseUrl}/ChangePassword`,result,
+    {headers: new HttpHeaders(
+      { 'Authorization': `${localStorage.getItem("usertoken")}`}
+    )}
+    );
   }
 
   otpVerificaton(result:any){
@@ -62,46 +70,72 @@ export class BlogPostService {
     );
       
   }
+  editProfile(id:any,data:any){
 
-  users() {
-    return this.http.get(`${baseUrl}/usersPosts`)
-
+    return this.http.put(`${baseUrl}/editProfile/${id}`, data,{
+      headers: new HttpHeaders(
+        { 'Authorization': `${localStorage.getItem("usertoken")}` }
+      )
+    })
   }
+
+  currentUser() {
+    return this.http.get(`${baseUrl}/specificUser`,{
+      headers: new HttpHeaders(
+        { 'Authorization': `${localStorage.getItem("usertoken")}` }
+      )
+    })
+  }
+  
+  singleUserPosts(id:any){
+    
+    return this.http.get(`${baseUrl}/specificUserPost/${id}`,{
+      headers: new HttpHeaders(
+        { 'Authorization': `${localStorage.getItem("usertoken")}` }
+      )
+    })
+    
+  }
+
+
+  usersPost(pageNum:any,limit:any) {
+    return this.http.get(`${baseUrl}/usersPosts?page=${pageNum}&limit=${limit}`)
+  }
+
+  userList(pageNum:any,limit:any){
+    return this.http.get(`${baseUrl}/usersList?page=${pageNum}&limit=${limit}`)
+  }
+
+  userSearch(user_name:any){
+    return this.http.get(`${baseUrl}/userSearch?name=${user_name}`)
+  }
+
+  postSearch(title:any){
+    return this.http.get(`${baseUrl}/postSearch?title=${title}`)
+    }
+  
+
+  userComment(id:any){
+    return this.http.get(`${baseUrl}/userComments/${id}`)
+  }
+
+  postList(id:any){
+    // console.log("wertyuiop",id)
+    return this.http.get(`${baseUrl}/postList/${id}`)
+  }
+
+ 
 
   createPost(data: any){
 
-    this.http.post(`${baseUrl}/createPost`, data, {
+    return this.http.post(`${baseUrl}/createPost`, data, {
       headers: new HttpHeaders(
         { 'Authorization': `${localStorage.getItem("usertoken")}` }
       )
-    }).subscribe((data: any) => {
-      if (data.error) {
-        
-        console.log(data)
-      }
-      else {
-        this.router.navigateByUrl('/homepage');
-      };
-
-    });
-  }
-
-  editpost(id:any,data:any){
-
-    this.http.put(`${baseUrl}/editPost/${id}`, data,{
-      headers: new HttpHeaders(
-        { 'Authorization': `${localStorage.getItem("usertoken")}` }
-      )
-    }).subscribe((data: any) => {
-      if (data.error) {
-        console.log(data)
-      }
-      else {
-        
-        this.router.navigateByUrl('/homepage')
-      }
     })
   }
+
+  
 
   comment(id: any, data:any) {
 
@@ -109,26 +143,18 @@ export class BlogPostService {
       headers: new HttpHeaders(
         { 'Authorization': `${localStorage.getItem("usertoken")}` }
       )
-    }).subscribe((data: any) => {
-      if (data.error) {
-        
-      console.log(data)
-      }
-      else {
-        this.router.navigateByUrl('/homepage');
-      };
-
-    });
+    })
   }
 
-  deletepost(id: any) {
-
-    return this.http.delete(`${baseUrl}/deletePost/${id}`,{
+  
+  deleteComment(id:any){
+    // console.log(id)
+    return this.http.delete(`${baseUrl}/deleteComment/${id}`,{
       headers: new HttpHeaders(
         {'Authorization': `${localStorage.getItem("usertoken")}`}
       )
     });
-  };
+  }
 
   like(id: any) {
 
@@ -139,5 +165,5 @@ export class BlogPostService {
     })
   };
 
-  
+ 
 };

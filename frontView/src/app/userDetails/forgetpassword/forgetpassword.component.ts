@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BlogPostService } from 'src/app/services';
+import { NgxSpinnerService } from "ngx-spinner";
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-forgetpassword',
@@ -10,12 +13,16 @@ import { BlogPostService } from 'src/app/services';
 })
 export class ForgetpasswordComponent implements OnInit {
   passwordform: any
+ 
 
-  constructor(private userService:BlogPostService, private router:Router ) {}
+  constructor(private userService:BlogPostService,
+     private router:Router, 
+     private spinner: NgxSpinnerService,
+     private toastr: ToastrService ) {}
 
   ngOnInit(): void {
     this.passwordform = new FormGroup({
-      user_email: new FormControl('',[Validators.required]),
+      user_email: new FormControl('',[Validators.required,Validators.email]),
     });
     
   }
@@ -23,24 +30,36 @@ export class ForgetpasswordComponent implements OnInit {
 
   forgetpassword(){
     
-    if(this.passwordform.valid){
+    try{
+      if(this.passwordform.valid){
+        this.spinner.show();
+  
+        this.userService.forgetPassword(this.passwordform.value).subscribe(
+          (result:any) => {
+            this.spinner.hide();
+        this.toastr.success('Success', result.message);
 
-      this.userService.forgetPassword(this.passwordform.value).subscribe((result:any) => {
-        localStorage.setItem ('token', result.cookie);
-        if({message:"OTP created successfully" }){
+            localStorage.setItem ('token', result.cookie);
+            this.router.navigateByUrl('layout/otpverification');
+          },
+          err => {
+            this.spinner.hide();
+            
+            this.toastr.error(err.error.message);
+
+          }
+        );
         
-          this.router.navigateByUrl('/otpverification');
-        }
-        else{
-          this.router.navigateByUrl('/forgetpassword');
-        }
-        
-      })
+      }
+    }
+    catch (error:any) {
+      this.spinner.hide();
+      this.toastr.error(error);
       
+      return;
     }
     
   };
-    
 
 }
 

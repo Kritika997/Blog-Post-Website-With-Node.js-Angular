@@ -1,20 +1,7 @@
-/* .gradient-custom-3 {
-  background: #84fab0;
-  background: -webkit-linear-gradient(to right, rgba(132, 203, 250, 0.5), rgba(143, 211, 244, 0.5));
-  background: linear-gradient(to right, rgba(197, 132, 250, 0), rgba(143, 211, 244, 0.5));
-}
-.gradient-custom-4 {
-  background: #84fab0;
-  background: -webkit-linear-gradient(to right, rgb(197, 132, 250), rgba(143, 211, 244, 1));
-  background: linear-gradient(to right, rgb(197, 132, 250), rgba(143, 211, 244, 1));
-} */
 
-.card-registration .select-input.form-control[readonly]:not([disabled]) {
-  font-size: 1rem;
-  line-height: 2.15;
-  padding-left: .75em;
-  padding-right: .75em;
-}
-.card-registration .select-arrow {
-  top: 13px;
+
+
+.center{
+  text-align: center;
+  
 }

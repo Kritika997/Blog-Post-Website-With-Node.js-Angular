@@ -1,0 +1,61 @@
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <li class="nav-heading">Pages</li>
+
+      <li class="nav-item">
+        <a *ngIf="loggedIn()" class="nav-link collapsed" href="layout/homepage">
+          <i class="bi bi-house-door-fill"></i>
+
+          <span>Back To Home</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a *ngIf="loggedIn()" class="nav-link collapsed" href="layout/userprofile">
+          <i class="bi bi-person-fill"></i>
+          <span>Profile</span>
+        </a>
+      </li><!-- End Profile Page Nav -->
+
+      <li class="nav-item">
+        <a *ngIf="loggedIn()" class="nav-link collapsed" href="layout/createpost">
+          <i class="bi bi-question-circle-fill"></i>
+          <span>Create Post</span>
+        </a>
+      </li><!-- End F.A.Q Page Nav -->
+
+      <li class="nav-item">
+        <a *ngIf="!loggedIn()" class="nav-link collapsed" href="/register">
+          <i class="bi bi-credit-card-fill"></i>
+          <span>Register</span>
+        </a>
+      </li><!-- End Register Page Nav -->
+     
+      <li class="nav-item">
+        <a *ngIf="!loggedIn()" class="nav-link collapsed" href="/login">
+          <i class="bi bi-door-closed-fill"></i>
+          <span>Login</span>
+        </a>
+      </li><!-- End Login Page Nav -->
+
+      <li class="nav-item">
+        <a *ngIf="loggedIn()"class="nav-link collapsed" (click)="onLogOut()">
+          <i class="bi bi-door-open-fill"></i>
+          <!-- <i class="bi bi-dash-circle"></i> -->
+          <span>Log Out</span>
+        </a>
+      </li><!-- End Error 404 Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="layout/alluserdetails">
+          <i class="bi bi-people-fill"></i>
+          <!-- <i class="bi bi-dash-circle"></i> -->
+          <span>All Users</span>
+        </a>
+      </li>
+
+    </ul>
+
+  </aside><!-- End Sidebar-->

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Components / Cards - NiceAdmin Bootstrap Template</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+</head>
+
+<header class="header fixed-top d-flex align-items-center">
+  <div class="d-flex align-items-center justify-content-between">
+    <a href="index.html" class="logo d-flex align-items-center">
+      <img src="assets/img/logo.png" alt="">
+      <span class="d-none d-lg-block">NiceAdmin</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn"></i>
+  </div><!-- End Logo -->
+  <div class="search-bar">
+    <form class="form-inline" id="searchForm">
+      <div class="form-group">
+        <input class="form-control mr-sm-2" type="search" placeholder="search..." id="speciesNameSearch"
+          name="speciesNameSearch" (keyup.enter)="getSearchResult()" [(ngModel)]="speciesName">
+      </div>
+    </form>
+
+  </div>
+
+  <nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+      <a class="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown">
+        <tr *ngFor="let obj of userData">
+        <img [src]=" obj.user_profilePic? userImage+obj.user_profilePic: 'uploads'" alt="Profile"
+          class="rounded-circle">
+          &nbsp;
+        <span class="d-none d-md-block dropdown-toggle ps-2">{{obj.user_name}}</span>
+      </tr>
+      </a>
+    </ul>
+  </nav>
+</header>
+
+
+<body>
+
+
+
+  <main id="main" class="main">
+
+
+    <section class="section profile">
+      <div class="row">
+
+        <div class="col-xl-12">
+
+          <div class="card">
+            <div class="card-body pt-3">
+
+              <ul class="nav nav-tabs nav-tabs-bordered">
+
+
+              </ul>
+              <div class="tab-content pt-2">
+
+
+                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+
+                  <h5 class="card-title">All Users</h5>
+                  <div class="list-group">
+
+                    <tr
+                      *ngFor="let obj of data | paginate: { itemsPerPage: limit, currentPage: pageNum ,totalItems: totalRecords}">
+                      <div class="d-flex w-100 justify-content-left">
+                        <img [src]=" obj.user_profilePic? userImage+obj.user_profilePic: 'uploads'" alt="Picture"
+                          style=" width: 15%; height: 20%;">
+
+                          
+                            <div style="margin-left:10%">
+                              
+                            <a *ngIf="isAdmin()" (click)="deleteUser(obj._id)"><i class="bi bi-trash-fill"
+                              style="color: red; cursor: pointer;"></i>Delete User</a>
+                            </div>
+                          
+
+                        <p style="margin-left:30%">
+                         
+                          <li class="mb-1" style="color: black;">{{obj.user_name}}</li>
+                          <li class="mb-1" style="color: black;">{{obj.user_email}}</li> 
+                          <li class="mb-1" style="color: black;">{{obj.user_location}}</li>
+                          <li class="mb-1" style="color: black;">{{obj.createdAt | date:"dd/MM/yy" }}</li>
+                        </p>
+                      </div>
+                      &nbsp;
+
+                    </tr>
+                  </div>
+                  <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
+                </div>
+
+              </div><!-- End Bordered Tabs -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box" [fullScreen]="true">
+      <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+
+  </main><!-- End #main -->
+
+
+</body>
+
+</html>

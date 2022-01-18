@@ -16,7 +16,7 @@ const Usercomment = new mongoose.Schema({
 });
 
 
-//This  is table schema for storing comments
+//This  is table schema for storing comments   
 
 let comments = mongoose.model('Usercomment', Usercomment);
 

@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const userData = new mongoose.Schema({
+    googleID:{
+        type:Number,
+        default: 0
+    },
     user_name:{
         type: String,
         required: true
@@ -10,18 +14,28 @@ const userData = new mongoose.Schema({
         required: true
     },
     user_gender:{
-        type: String
+        type: String,
+        
     },
     user_profilePic:{
         type: String  
       },
     user_location:{
-        type:String
+        type:String,
+        default:"India"
     },
     user_password:{
         type: String,
-        required: true
+       
+    },
+    walletAMount:{
+        type: Number,
+        default: 10
+    },
+    role:{
+        type:String,
     }
+
 },
     {timestamps:true
 });

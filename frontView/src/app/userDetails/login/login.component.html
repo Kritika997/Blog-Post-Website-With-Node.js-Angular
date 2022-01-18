@@ -1,108 +1,132 @@
-<!-- <section class="vh-100 bg-image" style="background-image: url('https://mdbootstrap.com/img/Photos/new-templates/search-box/img4.jpg');">
-  <div class="mask d-flex align-items-center h-100 gradient-custom-3">
-    <div class="container h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
-          <div class="card" style="border-radius: 15px;">
-            <div class="card-body p-5">
-              <h2 class="text-uppercase text-center mb-5">LOGIN</h2>
+<!DOCTYPE html>
+<html lang="en">
 
-              <form [formGroup] = "loginform">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
+  <title>Pages / Login - NiceAdmin Bootstrap Template</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
 
-                <div class="form-outline mb-4">
-                  <input type="email" id="form3Example3cg" formControlName="user_email" required #user_email class="form-control form-control-lg" />
-                  <label class="form-label" for="form3Example3cg">Your Email</label>
-                  <div style="color:red" *ngIf="loginform.get('user_email').invalid && (loginform.get('user_email').dirty || loginform.get('user_email').touched)">
-                    Email is required.
+</head>
+
+<body>
+
+  <main>
+    <div class="container">
+
+      <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+              <div class="d-flex justify-content-center py-4">
+                <a href="index.html" class="logo d-flex align-items-center w-auto">
+                  <img src="assets/img/logo.png" alt="">
+                  <span class="d-none d-lg-block">NiceAdmin</span>
+                </a>
+              </div><!-- End Logo -->
+
+              <div class="card mb-3">
+
+                <div class="card-body">
+
+                  <div class="pt-4 pb-2">
+                    <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
+                    <p class="text-center small">Enter your Email Address & password to login</p>
                   </div>
-                </div>
 
-                <div class="form-outline mb-4">
-                  <input type="password" id="form3Example4cg" formControlName="user_password" class="form-control form-control-lg" />
-                  <label class="form-label" for="form3Example4cg">Password</label>
-                  <div style="color:red" *ngIf="loginform.get('user_password').invalid && (loginform.get('user_password').dirty || loginform.get('user_password').touched)">
-                    Password is required.
-                  </div>
-                </div>
-  
-                  <div class="d-flex justify-content-center">
-                    <button type="button" [disabled]="loginform.invalid" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="login()" >Login</button>
-                  </div>
-                  <p class="text-center text-muted mt-5 mb-0">You Don't Have Account <a href="/register" class="fw-bold text-body"><u>Resgister here</u></a></p>
+                  <form [formGroup]="loginform" novalidate>
 
-                  <p class="text-center text-muted mt-5 mb-0">Did You Forget Your Password<a href="/forgetpassword" class="fw-bold text-body"><u>Forget Password</u></a></p>
-  
-                </form>
-  
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section> -->
-
-<section class="h-100 bg-dark">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col">
-        <div class="card card-registration my-4">
-          <div class="row g-0">
-            <div class="col-xl-6 d-none d-xl-block">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
-                alt="Sample photo" class="img-fluid"
-                style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
-            </div>
-            <form [formGroup]="loginform" class="col-xl-6">
-              <div class="card-body p-md-8 text-black">
-                <h3 class="mb-5 text-uppercase">Login Form</h3>
-
-                <div class="row">
-
-                  <div class="form-outline col-md-10 mb-4">
-                    <input type="email" id="form3Example3cg" formControlName="user_email" required #user_email
-                      class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example3cg">Enter Your Email</label>
+                    <div class="col-12">
+                      <label class="form-label" for="form3Example3cg">Enter Email </label>
+                      <input type="email" id="yourEmail" formControlName="user_email" required #user_email
+                      class="form-control" placeholder="Enter Email ID"/>                     
                     <div style="color:red"
                       *ngIf="loginform.get('user_email').invalid && (loginform.get('user_email').dirty || loginform.get('user_email').touched)">
                       Email is required.
                     </div>
+                    </div>
 
-
-
-                    <div class="form-outline mb-3">
-                      <input type="password" id="form3Example4cg" formControlName="user_password"
-                        class="form-control form-control-lg" />
-                      <label class="form-label" for="form3Example4cg">Your Password Please</label>
+                    <div class="col-12">
+                      <label  class="form-label" for="form3Example4cg"> Password Please</label>
+                      <input type="password"  id="yourPassword"  formControlName="user_password"                      
+                        class="form-control" placeholder="Enter Your Password"  /> 
+                      
                       <div style="color:red"
                         *ngIf="loginform.get('user_password').invalid && (loginform.get('user_password').dirty || loginform.get('user_password').touched)">
                         Password is required.
                       </div>
-                      <!-- <div style="color:red"
-                        *ngIf=abc>
-                        Password is required ZZZZZZZZZZZZZZZZZZZZZZZZZZZZz.
-                      </div> -->
                     </div>
-                  </div>
+
+                    <div class="col-12">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="col-12">
+                     
+                      <button class="btn btn-primary w-100" [disabled]="loginform.invalid"
+                      (click)="login()" type="submit">Login</button>
+                    </div>
+
+                    <div class="center">
+                      <a  class="btn btn-outline-dark" href="http://localhost:8080/auth/google" role="button" style=" text-align: center; text-transform:none;  height: 40px;" >
+                        <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" 
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"  />
+                        Login with Google
+                      </a>
+                    </div>
+                    <div class="col-12">
+                      <!-- <li class="nav-item"> -->
+                        
+                      <!-- </li> -->
+                      <p class="text-center text-muted mt-5 mb-0">If You Don't Have Account
+                        <a  href="/register">
+                          
+                          <i class="bi bi-card-list"></i>
+                          <span>Register Here</span>
+                        </a>
+                      </p>
+    
+                    <p class="text-center text-muted mt-3 mb-0">did you forget password?
+                      <a  href="/forgetpassword">
+                          
+                        <i class="bi bi-key"></i>
+                        <span>Forget Password</span>
+                        </a>
+                    </p>
+
+                    <p class="text-center text-muted mt-3 mb-0">wants to see posts without login?
+                      <a  href="">
+                          
+                        <i class="bi bi-house-door-fill"></i>
+                        <span>Home</span>
+                        </a>
+                    </p>
+                     
+                    </div>
+                    
+                  </form>
+
                 </div>
-
-
-                <div class="d-flex justify-content-center">
-                  <button type="button" [disabled]="loginform.invalid"
-                    class="btn btn-success btn-block btn-lg gradient-custom-4 text-body"
-                    (click)="login()">Login</button>
-                </div>
-                <p class="text-center text-muted mt-5 mb-0">You Don't Have Account <a href="/register"
-                    class="fw-bold text-body"><u>Resgister here</u></a></p>
-
-                <p class="text-center text-muted mt-5 mb-0">Did You Forget Your Password<a href="/forgetpassword"
-                    class="fw-bold text-body"><u>Forget Password</u></a></p>
               </div>
-            </form>
+
+             
+            </div>
           </div>
         </div>
-      </div>
+
+      </section>
+
     </div>
-  </div>
-</section>
+    
+  </main><!-- End #main -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+</body>
+  
+</html>

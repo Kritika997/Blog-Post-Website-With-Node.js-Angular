@@ -4,6 +4,9 @@ const userPost = new mongoose.Schema({
     UserId:{
         type:mongoose.Schema.Types.ObjectId, ref:'UserDetails'
     },
+    Title:{
+        type:String
+    },
     Blog: {
         type: String
     },
@@ -12,7 +15,11 @@ const userPost = new mongoose.Schema({
     },
     Like:{
         type:Number
-    }
+    },
+    Comment: {
+        type: Number 
+    },
+    
     },
     {timestamps:true
 });

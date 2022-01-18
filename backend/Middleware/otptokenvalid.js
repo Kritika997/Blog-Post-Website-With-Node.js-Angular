@@ -9,7 +9,9 @@ module.exports = (req, res, next) => {
         jwt.verify(authHeader, "userVerify", (err, userVerify) => { 
             if (err) {
                 // res.send(404);
-                res.send("not verified")
+                res.status(400).send({
+                    message:"token not verified"
+                })
             }
             else {
                 req.userVerify = userVerify;
@@ -19,7 +21,7 @@ module.exports = (req, res, next) => {
             };
         });
     } else {
-        res.send("Token Invalid");
+       res.status(530).send("Token Invalid");
     };
 };
 

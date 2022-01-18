@@ -1,110 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Pages / Register - NiceAdmin Bootstrap Template</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
 
-<section class="h-100 bg-dark">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col">
-        <div class="card card-registration my-4">
-          <div class="row g-0">
-            <div class="col-xl-6 d-none d-xl-block">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
-                alt="Sample photo" class="img-fluid"
-                style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
-            </div>
-            <form [formGroup]="registerform" class="col-xl-6">
-              <div class="card-body p-md-8 text-black">
-                <h3 class="mb-5 text-uppercase">Registration Form</h3>
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
 
-                <div class="row">
-                  <div class="form-outline col-md-8 mb-4">
-                  <div class="form-outline mb-4">
-                    <input type="text" id="form3Example1cg" formControlName="user_name"
-                      class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example1cg">Your Name</label>
-                    <div style="color:red"
-                      *ngIf="registerform.get('user_name').invalid && (registerform.get('user_name').dirty || registerform.get('user_name').touched)">
-                      User Name is required.
-                    </div>
+
+</head>
+
+<body>
+
+  <main>
+    <div class="container">
+
+      <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+              <div class="d-flex justify-content-center py-4">
+                <a href="index.html" class="logo d-flex align-items-center w-auto">
+                  <img src="assets/img/logo.png" alt="">
+                  <span class="d-none d-lg-block">NiceAdmin</span>
+                </a>
+              </div>
+
+              <div class="card mb-3">
+
+                <div class="card-body">
+
+                  <div class="pt-4 pb-2">
+                    <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
+                    <p class="text-center small">Enter your personal details to create account</p>
                   </div>
 
-                  <div class="form-outline mb-4">
-                    <input type="email" id="form3Example3cg" formControlName="user_email"
-                      class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example3cg">Your Email</label>
-                    <div style="color:red"
-                      *ngIf="registerform.get('user_email').invalid && (registerform.get('user_email').dirty || registerform.get('user_email').touched)">
-                      Password is required.
+                  <form [formGroup]="registerform">
+                    <div class="col-12">
+                      <label class="form-label" for="form3Example1cg">Your Name</label>
+                      <input type="text" formControlName="user_name" class="form-control" id="yourName"
+                        placeholder="Enter Your Full Name" />
+                      <div style="color:red"
+                        *ngIf="registerform.get('user_name').invalid && (registerform.get('user_name').dirty || registerform.get('user_name').touched)">
+                        Please enter a valid User.
+                      </div>
                     </div>
-                  </div>
+
+                    <div class="col-12">
+                      <label class="form-label" for="form3Example3cg">Your Email</label>
+                      <input type="email" id="yourEmail" formControlName="user_email" class="form-control "
+                        placeholder="Enter Email ID" />
+                      <div style="color:red"
+                        *ngIf="registerform.get('user_email').invalid && (registerform.get('user_email').dirty || registerform.get('user_email').touched)">
+                        Please enter a valid Email adddress!.
+                      </div>
+                    </div>
+
+                    <br>
+
+                    <div class="col-12">
+                      <label class="form-label" for="form3Example3cg">Gender</label>
+                      <select formControlName="user_gender">
+                        <option *ngFor="let selector of selectGender">{{selector}}</option>
+                      </select>
+                      &nbsp;
 
 
-                  <div class="form-outline mb-4">
-                    <input type="text" id="form3Example3cg" formControlName="user_gender"
-                      class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example3cg">Gender</label>
-                    <div style="color:red"
-                      *ngIf="registerform.get('user_gender').invalid && (registerform.get('user_gender').dirty || registerform.get('user_gender').touched)">
-                      Gender is required.
+                      <label class="form-label" for="form3Example3cg">Role</label>
+                      <select formControlName="role">
+                        <option *ngFor="let selector of userRole">{{selector}}</option>
+                      </select>
                     </div>
-                  </div>
+                    <br>
 
-                  <div class="form-outline mb-4">
-                    <input type="text" id="form3Example3cg" formControlName="user_location"
-                      class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example3cg">Location</label>
-                    <div style="color:red"
-                      *ngIf="registerform.get('user_location').invalid && (registerform.get('user_location').dirty || registerform.get('user_location').touched)">
-                      Location is required.
+                    <div class="col-12">
+                      <label class="form-label" for="form3Example3cg">Location</label>
+                      <select formControlName="user_location">
+                        <option *ngFor="let selector of cityName">{{selector}}</option>
+                      </select>
                     </div>
-                  </div>
 
-                  <div class="form-outline mb-4">
-                    <input type="file" id="form3Example3cg" formControlName="user_profile" (change)="upload($event)"
-                      class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example3cg">Your Profile Image</label>
-                    <div style="color:red"
-                      *ngIf="registerform.get('user_profile').invalid && (registerform.get('user_profile').dirty || registerform.get('user_profile').touched)">
-                      Profile Picture is required.
-                    </div>
-                  </div>
+                    <br>
+                    <div class="col-12">
+                      <label class="form-label" for="form3Example3cg">Your Profile Image</label>
+                      <input type="file" id="profile Picture" formControlName="user_profile"
+                        (change)="readURL($event);" />
+                      <img id="blah" [src]="file" alt="" style="height: 150px; width: 150px;"
+                        class="form-control form-control-lg" />
+                      <div style="color:red"
+                        *ngIf="registerform.get('user_profile').invalid && (registerform.get('user_profile').dirty || registerform.get('user_profile').touched)">
+                        Profile Picture is required.
+                      </div>
+                      <br>
 
-                  <div class="form-outline mb-4">
-                    <input type="password" id="form3Example4cg" formControlName="user_password"
-                      class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example4cg">Password</label>
-                    <div style="color:red"
-                      *ngIf="registerform.get('user_password').invalid && (registerform.get('user_password').dirty || registerform.get('user_password').touched)">
-                      Password is required.
                     </div>
-                  </div>
+                    <div class="col-12">
+                      <label class="form-label" for="form3Example4cg">Password</label>
+                      <input type="password" id="yourPassword" formControlName="user_password" class="form-control "
+                        placeholder="Create Your Password" />
+                      <div style="color:red"
+                        *ngIf="registerform.get('user_password').invalid && (registerform.get('user_password').dirty || registerform.get('user_password').touched)">
+                        Please enter your password!
+                      </div>
 
-                  <div class="form-outline mb-4">
-                    <input type="password" id="form3Example4cdg" formControlName="confirm_password"
-                      class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example4cdg">Repeat your password</label>
-                    <div style="color:red"
-                      *ngIf="registerform.get('confirm_password').invalid && (registerform.get('confirm_password').dirty || registerform.get('confirm_password').touched)">
-                      Confirm Password is required.
                     </div>
-                  </div>
+                    <div class="col-12">
+                      <label class="form-label" for="form3Example4cdg">Repeat your password</label>
+                      <input type="password" id="yourConfirmPassword" formControlName="confirm_password"
+                        class="form-control" placeholder="confirm_password " />
+                      <div style="color:red"
+                        *ngIf="registerform.get('confirm_password').invalid && (registerform.get('confirm_password').dirty || registerform.get('confirm_password').touched)">
+                        Confirm Password is required.
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="form-check">
+                        <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required>
+                        <label class="form-check-label" for="acceptTerms">I agree and accept the <a href="#">terms and
+                            conditions</a></label>
+                        <div class="invalid-feedback">You must agree before submitting.</div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <button class="btn btn-primary w-100" type="submit" (click)="register()">Create Account</button>
+                    </div>
+                    <!-- <div class="d-flex justify-content-center">
+                      <button type="button" 
+                        class="btn btn-success btn-block btn-lg gradient-custom-4 text-body"
+                        (click)="register()">Register</button>
+                    </div> -->
+
+                    <div class="col-12">
+                      <p class="text-center text-muted mt-3 mb-0">Already have an account?
+                        <a href="/login">
+
+                          <i class="bi bi-key"></i>
+                          <span>Login Here</span>
+                        </a>
+                      </p>
+                    </div>
+
+                  </form>
+
                 </div>
-
               </div>
 
-              <div class="d-flex justify-content-center">
-                <button type="button" [disabled]="registerform.invalid"
-                  class="btn btn-success btn-block btn-lg gradient-custom-4 text-body"
-                  (click)="register()">Register</button>
-              </div>
 
-              <p class="text-center text-muted mt-5 mb-0">Have already an account? <a href="/login"
-                  class="fw-bold text-body"><u>Login here</u></a></p>
-
+            </div>
           </div>
-          </form>
         </div>
-      </div>
+
+      </section>
+
     </div>
-  </div>
-  </div>
-</section>
+  </main>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+  <script src="assets/js/main.js"></script>
+
+</body>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box" [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+
+</html>

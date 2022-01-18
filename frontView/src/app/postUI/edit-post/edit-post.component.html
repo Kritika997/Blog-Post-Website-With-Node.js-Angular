@@ -1,45 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
 
-    <section class="h-100 bg-dark">
-      <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col">
-            <div class="card card-registration my-4">
-              <div class="row g-0">
-                <div class="col-xl-6 d-none d-xl-block">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
-                    alt="Sample photo" class="img-fluid"
-                    style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Users / Profile - NiceAdmin Bootstrap Template</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+</head>
+
+<body>
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Post Edit Form</h1>
+
+    </div>
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-6">
+
+          <div class="card">
+            <div class="card-body">
+              <!-- <h5 class="card-title">Post Edit Form</h5> -->
+
+
+              <form [formGroup]="editPostForm">
+                <div class="row mb-3">
+                  <label for="inputText" class="col-sm-2 col-form-label">Editor</label>
+                  <div class="col-sm-10">
+                    <textarea rows="5" formControlName="Blog" class="form-control"></textarea>
+                  </div>
+
                 </div>
-                <form [formGroup]="editPostForm" class="col-xl-6">
-    
-                  <div class="card-body p-md-8 text-black">
-                    <h3 class="mb-5 text-uppercase">Edit Post Form</h3>
-    
-                    <div class="form-outline mb-4">
-                      <label class="form-label" for="form3Example1cg">Edit Your Post Here</label>
-                      <textarea rows="5" formControlName="Blog" class="form-control form-control-lg" ></textarea>
-                      <div style="color:red" *ngIf="editPostForm.get('Blog').invalid && (editPostForm.get('Blog').dirty || editPostForm.get('Blog').touched)">
-                        Post is required.
-                      </div>
-                    </div>
-  
-                  <div class="form-outline mb-4">
-                    <input type="file" id="form3Example3cg" formControlName="Picture" (change)="upload($event)" class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example3cg">Update Your Picture</label>
-                    
+                <div class="row mb-3">
+                  <label for="inputFile" class="col-sm-2 col-form-label">Picture</label>
+                  <div class="col-sm-10">
+                    <input type="file" formControlName="Picture" (change)="readURL($event)" />
+                    <img [src]="file" alt="" class="form-control" style="height: 5cm; width: 6cm;" />
                   </div>
-  
-      
-                      <div class="d-flex justify-content-center">
-                        <button type="button" [disabled]="editPostForm.invalid" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="updatepost()">Submit</button>
-                      </div>
-                  </div>
-                  
-    
-                </form>
+                  <!-- <div style="color:red"
+                      *ngIf="editPostForm.get('Picture').invalid && (editPostForm.get('Picture').dirty || editPostForm.get('Picture').touched)">
+                      Picture is required.
+                    </div> -->
+
+                </div>
+
+
+              </form>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                  <button type="button" [disabled]="editPostForm.invalid" class="btn btn-primary"
+                    (click)="updatepost()">Update</button>
+                </div>
+
               </div>
+
+            </div>
+          </div>
+
+        </div>
+        <div class="col-xl-6">
+          <div class="card">
+            <div class="card-body pt-3">
+
+
+              <div class="tab-content pt-2">
+
+
+                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                  <h5 class="card-title">Post</h5>
+                  <div class="list-group">
+
+                    <a href="#" class="list-group-item list-group-item-action">
+                      <tr *ngFor="let data of postList">
+                        <h5 class="card-title text-center text-muted pb-0 fs-4">{{data.Title}}</h5>
+
+                        <div class="d-flex w-100 justify-content-between">
+                          <div class="comment mt-4 text-justify float-left"> 
+                            <img [src]=" data.Picture? image+data.Picture: 'uploads'" alt="Avatar" style="width:100%">
+
+                            <h5 class="mb-1">{{data.Blog}} </h5>
+
+                          </div>
+
+                        </div>
+
+                      </tr>
+                    </a>
+
+                  </div>
+
+
+                </div>
+
+
+              </div>
+
             </div>
           </div>
         </div>
+
       </div>
     </section>
+
+    <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box" [fullScreen]="true">
+      <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+
+  </main>
+
+</body>
+
+</html>
